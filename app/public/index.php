@@ -19,8 +19,14 @@ include_once("_includes/global-functions.php");
 
 <body>
 
-    <h1><?php echo "Hello world"; ?></h1>
+    <h1>Ladda upp en fil</h1>
 
+    <form action="handleUpload.php" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" id="fileToUpload" />
+        <button type="submit">Upload</button>
+    </form>
+
+</form>
 
 </body>
 

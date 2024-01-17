@@ -2,6 +2,7 @@ FROM php:8-apache
 # FROM php:7.4-apache
 
 # RUN apt-get update && apt-get upgrade -y
+#USER www-data
 
 RUN a2enmod ssl && a2enmod rewrite
 
