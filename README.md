@@ -15,3 +15,40 @@ INSERT INTO `languages` (`language`, `language_type`) VALUES
 ('CSS', 2),
 ('svenska', 1);
 ```
+
+---
+
+Branch *1-code-from-module6*
+
+Create class Database - first step
+
+```php
+class Database
+{
+    public function __construct()
+    {
+
+        // credentials
+        $servername = "mysql";
+        $database = "db_lecture";
+        $username = "db_user";
+        $password = "db_password";
+
+        // data source name
+        $dsn = "mysql:host=$servername;dbname=$database";
+
+        try {
+
+            // connect to database
+            $pdo = new PDO($dsn, $username, $password);
+
+            // set the PDO error mode to exception
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            echo "Connected successfully";
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
+    }
+}
+```
