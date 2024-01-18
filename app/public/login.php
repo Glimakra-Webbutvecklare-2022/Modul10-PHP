@@ -2,8 +2,7 @@
 
     // se till att sessioner används på sidan
     session_start();
-    
-
+        
     include_once("_includes/database-connection.php");
     include_once("_includes/global-functions.php");
     
