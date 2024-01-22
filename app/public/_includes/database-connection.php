@@ -21,7 +21,7 @@ try {
 
 
     // SQL to create table if it does not exist
-    $sql = "CREATE TABLE IF NOT EXISTS Files (
+    $sql1 = "CREATE TABLE IF NOT EXISTS Files (
         id INT AUTO_INCREMENT PRIMARY KEY,
         filename VARCHAR(255) NOT NULL,
         filepath VARCHAR(255) NOT NULL,
@@ -30,8 +30,20 @@ try {
     )";
 
     // Execute query
-    $pdo->exec($sql);
+    $pdo->exec($sql1);
+    
     echo "<p>Table 'Files' checked/created successfully</p>";
+
+    // SQL to create table if it does not exist
+    $sql2 = "CREATE TABLE IF NOT EXISTS Users (
+        id INT(11) AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) NOT NULL,
+        password VARCHAR(255) NOT NULL
+    )";
+
+    $pdo->exec($sql2);
+
+    echo "<p>Table 'Users' checked/created successfully</p>";
 
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
