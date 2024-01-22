@@ -21,19 +21,21 @@ include_once("_includes/global-functions.php");
 
 <body>
 
-    <h1>Ladda upp en fil</h1>
-
-    <form action="handleUpload.php" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" id="fileToUpload" />
-        <button type="submit">Upload</button>
-    </form>
-
-</form>
     <?php
     include "_includes/header.php";
     ?>
 
-    <h1><?php echo "Hello world"; ?></h1>
+    
+    <?php
+    $isLoggedIn = isset($_SESSION["username"]);
+    if ($isLoggedIn) {
+        // Kontrollera om användare är inloggad
+        include "_includes/upload-form.php";
+    } else {
+        // om inte, skriv ut ett annat meddelande
+        echo "<p>You need to login in order to upload files</p>";
+    }
+    ?>
 
     <?php
     include "_includes/footer.php";

@@ -2,23 +2,27 @@
 
 // var_dump($_FILES);
 include_once("_includes/database-connection.php");
+include_once("_models/File.php");
+
+// När fileModel skapas så kommer en ny tabell files att skapas i databasen
+$fileModel = new File();
 
 
 
 
 // -------------------------------------------------
 
-// SQL to create table if it does not exist
-$sql = "CREATE TABLE IF NOT EXISTS Files (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    filename VARCHAR(255) NOT NULL,
-    filepath VARCHAR(255) NOT NULL,
-    size INT NOT NULL,
-    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
+// // SQL to create table if it does not exist
+// $sql = "CREATE TABLE IF NOT EXISTS Files (
+//     id INT AUTO_INCREMENT PRIMARY KEY,
+//     filename VARCHAR(255) NOT NULL,
+//     filepath VARCHAR(255) NOT NULL,
+//     size INT NOT NULL,
+//     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+// )";
 
-// Execute query
-$pdo->exec($sql);
+// // Execute query
+// $pdo->exec($sql);
 
 // -------------------------------------------------
 
@@ -43,15 +47,10 @@ $succesfullUpload = move_uploaded_file($_FILES["file"]["tmp_name"], $fullPath);
 if ($succesfullUpload) {
     echo "<p>This was a success!</p>";
 
-    $stmt = $pdo->prepare("INSERT INTO Files (filename, filepath, size) VALUES (:filename, :filepath, :size)");
-    $stmt->bindParam(':filename', $_FILES["file"]["name"]);
-    $stmt->bindParam(':filepath', $fullPath);
-    $stmt->bindParam(':size', $_FILES["file"]["size"]);
+    $uploadedId = $fileModel->add_one($_FILES["file"]["name"], $fullPath, $_FILES["file"]["size"]);
 
-    $sqlResult = $stmt->execute();
-
-    if ($sqlResult) {
-        echo "<p>Successfull insertion into table 'Files'</p>";
+    if ($uploadedId > 0) {
+        echo "<p>Successfull insertion into table 'files' with id: " . $uploadedId . "</p>";
     }
 }
 
