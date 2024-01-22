@@ -5,8 +5,9 @@
         
     include_once("_includes/database-connection.php");
     include_once("_includes/global-functions.php");
-    
-    setup_user($pdo);
+    include_once("_models/User.php");
+
+    $userModel = new User();
 ?>
 
 <html lang="en">
@@ -25,6 +26,10 @@
     ?>
 
     <h1>Login</h1>
+
+    <?php 
+        include "_includes/error-message.php";
+    ?>
     <form action="" method="post">
         <label for="username">Username: </label>
         <input type="text" name="username" id="username">
@@ -37,35 +42,29 @@
 
     <?php 
      if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // get user data from form
-        $form_username = $_POST['username'];
-        $form_password = $_POST['password'];
-
-        // send to database
-        $sql_statement = "SELECT * FROM `user` WHERE `username` = '$form_username'";
-
         try {
-            $result = $pdo->query($sql_statement);
-            
-            $user = $result->fetch();
+            $result = $userModel->authenticate($_POST["username"], $_POST["password"]);
             
             // no user found with these credentials
-            if (!$user) {
+            if ($result == -1) {
                 header("location: login.php");
+                $_SESSION["error_message"] = "no user found with these credentials";
                 exit();
             }
 
-            $is_correct_password = password_verify($form_password, $user['password']);
-            if (!$is_correct_password) {
+            // user found but incorrect password
+            if ($result == -2) {
                 header("location: login.php");
+                $_SESSION["error_message"] = "Incorrect password";
                 exit();
             }
 
 
             // när rätt lösenord är angivet är användaren känd
             // skapa sessionsvariabler som kan användas 
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['user_id'] = $user['user_id'];
+            // TODO: fixa username och user_id
+            $_SESSION['username'] = $result['username'];
+            $_SESSION['user_id'] = $result['user_id'];
 
 
             // redirect to start page

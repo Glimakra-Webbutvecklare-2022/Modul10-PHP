@@ -6,7 +6,9 @@ $title = "About PHP";
 
 include_once("_includes/database-connection.php");
 include_once("_includes/global-functions.php");
+include_once("_models/File.php");
 
+$fileModel = new File();
 ?>
 
 <!DOCTYPE html>
@@ -22,13 +24,22 @@ include_once("_includes/global-functions.php");
 <body>
 
     <?php
-    include "_includes/header.php";
+        include "_includes/header.php";
     ?>
 
+    <?php
+        include "_includes/error-message.php";
+    ?>
     
     <?php
     $isLoggedIn = isset($_SESSION["username"]);
     if ($isLoggedIn) {
+
+        echo "<h2>Your files</h2>";
+        $files_from_user = $fileModel->getFilesByUserId($_SESSION["user_id"]);
+
+        var_dump($files_from_user);
+
         // Kontrollera om användare är inloggad
         include "_includes/upload-form.php";
     } else {

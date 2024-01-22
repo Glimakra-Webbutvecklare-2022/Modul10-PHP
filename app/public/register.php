@@ -5,9 +5,10 @@ session_start();
 
 require_once "_includes/database-connection.php";
 include_once "_includes/global-functions.php";
+include_once "_models/User.php";
 
 
-setup_user($pdo);
+$userModel = new User();
 ?>
 
 <html lang="en">
@@ -28,27 +29,19 @@ setup_user($pdo);
     <h1>Register</h1>
     <form action="" method="post">
         <label for="username">Username: </label>
-        <input type="text" name="username" id="username">
+        <input type="text" name="username" id="username" required>
 
         <label for="password">Password: </label>
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" required>
 
         <button type="submit">Register</button>
     </form>
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // get user data from form
-        $form_username = $_POST['username'];
-        $form_hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-
-        // send to database
-        $sql_statement = "INSERT INTO `user` (`username`, `password`) VALUES ('$form_username', '$form_hashed_password')";
-
         try {
-            $result = $pdo->query($sql_statement);
-            if ($result->rowCount() == 1) {
+            $userId = $userModel->register($_POST['username'], $_POST['password']);
+            if ($userId > 0) {
                 // if OK redirect to login page
                 header("location: login.php");
             }

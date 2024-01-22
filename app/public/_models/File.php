@@ -27,7 +27,10 @@
                 filename VARCHAR(255) NOT NULL,
                 filepath VARCHAR(255) NOT NULL,
                 size INT NOT NULL,
-                uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                `user_id` int(11) NOT NULL,
+                KEY `user_id` (`user_id`),
+                CONSTRAINT `languages_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
             )";
 
             // Execute query
@@ -35,13 +38,21 @@
             $stmt->execute();
         }
 
-        public function add_one($fileName, $filePath, $fileSize) {
-            $stmt = $this->db->prepare("INSERT INTO files (filename, filepath, size) VALUES (?, ?, ?)");  
-            $stmt->execute([$fileName, $filePath, $fileSize]);
+        public function add_one($fileName, $filePath, $fileSize, $userId) {
+            $stmt = $this->db->prepare("INSERT INTO files (filename, filepath, size, user_id) VALUES (?, ?, ?, ?)");  
+            $stmt->execute([$fileName, $filePath, $fileSize, $userId]);
 
             // MySQL returns an id - last insterted Id...
             return $this->db->lastInsertId();
         }
+
+        public function getFilesByUserId($user_id) {
+            $stmt = $this->db->prepare("SELECT * FROM files WHERE user_id = ?");  
+            $stmt->execute([$user_id]);
+
+            return $stmt->fetchAll();
+        }
+
     }
 
 
